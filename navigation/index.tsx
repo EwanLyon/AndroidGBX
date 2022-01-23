@@ -18,6 +18,8 @@ import GBxCartReaderScreen from '../screens/GBxCartReaderScreen';
 import PhotosScreen from '../screens/PhotosScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import AutoConnection from '../screens/SerialConnection';
+import ManualConnection from '../screens/ManualScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -90,6 +92,22 @@ function BottomTabNavigator() {
         options={{
           title: 'Photos',
           tabBarIcon: ({ color }) => <TabBarIcon name="photo" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Serial"
+        component={AutoConnection}
+        options={{
+          title: 'Serial',
+          tabBarIcon: ({ color }) => <TabBarIcon name="usb" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Manual"
+        component={ManualConnection}
+        options={{
+          title: 'Manual',
+          tabBarIcon: ({ color }) => <TabBarIcon name="usb" color={color} />,
         }}
       />
     </BottomTab.Navigator>

@@ -27,6 +27,8 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 export type RootTabParamList = {
   GBxCartReader: undefined;
   Photos: undefined;
+  Serial: undefined;
+  Manual: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

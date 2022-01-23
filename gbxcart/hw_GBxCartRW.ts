@@ -1,4 +1,5 @@
-import { RNSerialport, definitions, actions, RNSerialportStatic } from 'react-native-serialport';
+import { RNSerialport, definitions, actions, RNSerialportStatic, IDevice } from 'react-native-serialport';
+import { Buffer } from 'buffer';
 
 export class GbxDevice {
 	DEVICE_NAME = "GBxCart RW";
@@ -90,40 +91,86 @@ export class GbxDevice {
 	BAUDRATE = 1000000;
 	MAX_BUFFER_LEN = 512;
 
-	constructor(port = undefined, maxBaud = 1700000) {
-		const conn_msg = [];
-		let ports = [];
-
-		RNSerialport.startUsbService();
-
-		if (port) {
-			ports = [port];
-		} else {
-			const comports = RNSerialport.getDeviceList().then((res) => {
-				console.log(res);
-			});
-		}
-
-		RNSerialport.stopUsbService();
+	constructor() {
+		// this.Initialize(port, max_baud, flashcarts)
 	}
 
-	async IsConnected(): Promise<boolean> {
-		if (!this.DEVICE) return false;
-		if (!this.DEVICE.isOpen()) return false;
-
+	LoadFirmwareVersion() {
 		try {
-			// while (this.DEVICE.in_waiting > 0) {
-			// 	console.debug(`Clearing input buffer... (${this.DEVICE.in_waiting})`);
-			// 	this.DEVICE.reset_input_buffer();
-			// 	await sleep(500);
-			// }
-			// this.DEVICE.reset_output_buffer()
-			return true
+			// RNSerialport.writeString(this.DEVICE_CMD.OFW_ERROR_LED_ON.toString());
+			RNSerialport.writeHexString(this.DEVICE_CMD.OFW_ERROR_LED_ON.toString(16).toUpperCase());
+			RNSerialport.writeHexString(this.DEVICE_CMD.OFW_DONE_LED_ON.toString(16).toUpperCase());
+			RNSerialport.writeHexString(this.DEVICE_CMD.OFW_PCB_VER.toString(16).toUpperCase());
+			RNSerialport.writeHexString(this.DEVICE_CMD.OFW_FW_VER.toString(16).toUpperCase());
+			RNSerialport.writeHexString(this.DEVICE_CMD.OFW_CART_PWR_ON.toString(16).toUpperCase());
+			console.log("Trying lol");
 		} catch (error) {
 			console.error(error);
-			return false;
 		}
 	}
+
+	// async Initialize(port = undefined, max_baud = 1700000, flashcarts = undefined) {
+	// 	if (await this.IsConnected()) this.DEVICE?.disconnect();
+
+	// 	RNSerialport.startUsbService();
+		
+	// 	const conn_msg = [];
+	// 	let ports: IDevice[] = [];
+
+	// 	// Get port
+	// 	if (port) {
+	// 		ports = [port];
+	// 	} else {
+	// 		const devices = await RNSerialport.getDeviceList()
+
+	// 		if (!devices) return;
+	// 		if (devices.length === 0) return;
+
+	// 		devices.forEach(device => {
+	// 			if (device.vendorId === 0x1A86 && device.productId === 0x7523) {
+	// 				ports.push(device);
+	// 			}
+	// 		});
+	// 	}
+
+	// 	// console.log(ports);
+
+	// 	ports.forEach(devicePort => {
+	// 		try {
+	// 			console.log(RNSerialport.isOpen().then(res => {
+	// 				console.log(`First: ${res}`)
+	// 			}));
+	// 			// RNSerialport.connectDevice(devicePort.name, this.BAUDRATE);
+
+	// 			console.log(RNSerialport.isOpen().then(res => {
+	// 				console.log(`Second: ${res}`)
+	// 			}));
+
+	// 		} catch (error) {
+	// 			console.error(error);
+	// 		}
+	// 	});
+
+	// 	RNSerialport.stopUsbService();
+	// }
+
+	// async IsConnected(): Promise<boolean> {
+	// 	if (!this.DEVICE) return false;
+	// 	if (!this.DEVICE.isOpen()) return false;
+
+	// 	try {
+	// 		// while (this.DEVICE.in_waiting > 0) {
+	// 		// 	console.debug(`Clearing input buffer... (${this.DEVICE.in_waiting})`);
+	// 		// 	this.DEVICE.reset_input_buffer();
+	// 		// 	await sleep(500);
+	// 		// }
+	// 		// this.DEVICE.reset_output_buffer()
+	// 		return true
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 		return false;
+	// 	}
+	// }
 }
 
 function sleep(ms: number) {
